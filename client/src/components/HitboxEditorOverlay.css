@@ -1,0 +1,233 @@
+.hitbox-editor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 120;
+}
+
+.hitbox-editor-canvas-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: auto;
+}
+
+.hitbox-editor-box {
+  position: absolute;
+  border: 2px solid;
+  box-sizing: border-box;
+  cursor: move;
+  pointer-events: auto;
+}
+
+.hitbox-editor-box.hurtbox {
+  border-color: rgba(80, 160, 255, 0.95);
+  background: rgba(0, 100, 255, 0.2);
+}
+
+.hitbox-editor-box.hitbox {
+  border-color: rgba(255, 80, 80, 0.95);
+  background: rgba(255, 0, 0, 0.25);
+}
+
+.hitbox-editor-box.pushbox {
+  border-color: rgba(80, 255, 80, 0.95);
+  background: rgba(0, 255, 0, 0.2);
+}
+
+.hitbox-editor-box-label {
+  position: absolute;
+  top: -18px;
+  left: 0;
+  font: 10px monospace;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 1px 4px;
+  white-space: nowrap;
+}
+
+.hitbox-editor-handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border: 1px solid #111;
+  pointer-events: auto;
+}
+
+.hitbox-editor-handle-nw { top: -5px; left: -5px; cursor: nwse-resize; }
+.hitbox-editor-handle-ne { top: -5px; right: -5px; cursor: nesw-resize; }
+.hitbox-editor-handle-sw { bottom: -5px; left: -5px; cursor: nesw-resize; }
+.hitbox-editor-handle-se { bottom: -5px; right: -5px; cursor: nwse-resize; }
+
+.hitbox-editor-panel {
+  position: absolute;
+  top: calc(8px * var(--ui-scale, 1));
+  right: calc(8px * var(--ui-scale, 1));
+  width: min(260px, 42vw);
+  max-height: calc(100% - 16px);
+  overflow: auto;
+  pointer-events: auto;
+  background: rgba(10, 10, 20, 0.92);
+  border: 1px solid #4ecdc4;
+  border-radius: 8px;
+  padding: calc(12px * var(--ui-scale, 1));
+  font-size: calc(12px * var(--ui-scale, 1));
+}
+
+.hitbox-editor-panel h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  color: #4ecdc4;
+}
+
+.hitbox-editor-hint {
+  margin: 0 0 10px;
+  color: #aaa;
+  line-height: 1.4;
+}
+
+.hitbox-editor-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.hitbox-editor-panel select,
+.hitbox-editor-panel input {
+  padding: 4px 6px;
+  background: #1a1a2e;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 4px;
+}
+
+.hitbox-editor-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.hitbox-editor-frame-control {
+  margin: 10px 0;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 6px;
+}
+
+.hitbox-editor-frame-control input[type="range"] {
+  width: 100%;
+  margin-top: 4px;
+}
+
+.hitbox-editor-phase {
+  margin-top: 6px;
+  font-size: 11px;
+  color: #ccc;
+}
+
+.hitbox-editor-phase-startup { color: #ffcc66; }
+.hitbox-editor-phase-active { color: #66ff99; }
+.hitbox-editor-phase-recovery { color: #aaa; }
+
+.hitbox-active { color: #66ff99; }
+.hitbox-inactive { color: #ff8888; }
+
+.hitbox-editor-phase-buttons {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.hitbox-editor-phase-buttons button {
+  flex: 1;
+  padding: 4px 6px;
+  font-size: 10px;
+  background: #2a2a3e;
+  color: #ddd;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.hitbox-editor-phase-buttons button:hover {
+  background: #3a3a55;
+  border-color: #4ecdc4;
+}
+
+.hitbox-editor-save-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 8px 0 4px;
+}
+
+.hitbox-editor-save,
+.hitbox-editor-download {
+  padding: 8px 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.hitbox-editor-save {
+  background: #4ecdc4;
+  color: #111;
+}
+
+.hitbox-editor-save:hover {
+  background: #6ee7df;
+}
+
+.hitbox-editor-download {
+  background: #2a2a3e;
+  color: #ddd;
+  border: 1px solid #555;
+}
+
+.hitbox-editor-download:hover {
+  border-color: #4ecdc4;
+}
+
+.hitbox-editor-save-status {
+  display: block;
+  margin-bottom: 6px;
+  color: #8f8;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.hitbox-editor-copy {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  background: #333;
+  color: #eee;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.hitbox-editor-copy:hover {
+  border-color: #888;
+}
+
+.hitbox-editor-copied {
+  display: block;
+  margin-top: 6px;
+  color: #8f8;
+}
+
+.hitbox-editor-preview {
+  margin-top: 10px;
+  padding: 8px;
+  background: #111;
+  border-radius: 4px;
+  font-size: 10px;
+  white-space: pre-wrap;
+  color: #ccc;
+}

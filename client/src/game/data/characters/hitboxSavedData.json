@@ -1,0 +1,625 @@
+{
+  "version": 1,
+  "hurtboxes": {
+    "IDLE": {
+      "offset": {
+        "x": -7863,
+        "y": -38400
+      },
+      "width": 15508,
+      "height": 38400
+    },
+    "WALK_FORWARD": {
+      "offset": {
+        "x": -9600,
+        "y": -38400
+      },
+      "width": 19200,
+      "height": 38400
+    },
+    "WALK_BACKWARD": {
+      "offset": {
+        "x": -9600,
+        "y": -38400
+      },
+      "width": 19200,
+      "height": 38400
+    },
+    "CROUCH": {
+      "offset": {
+        "x": -9600,
+        "y": -23040
+      },
+      "width": 19200,
+      "height": 23040
+    },
+    "JUMP_START": {
+      "offset": {
+        "x": -9600,
+        "y": -34622
+      },
+      "width": 19804,
+      "height": 34622
+    },
+    "JUMP_UP": {
+      "offset": {
+        "x": -9600,
+        "y": -34925
+      },
+      "width": 20862,
+      "height": 34925
+    },
+    "JUMP_FORWARD": {
+      "offset": {
+        "x": -9600,
+        "y": -34849
+      },
+      "width": 21013,
+      "height": 34849
+    },
+    "JUMP_BACKWARD": {
+      "offset": {
+        "x": -9600,
+        "y": -35076
+      },
+      "width": 21164,
+      "height": 35076
+    },
+    "DASH_BACKWARD": {
+      "offset": {
+        "x": -10733,
+        "y": -35907
+      },
+      "width": 21013,
+      "height": 35907
+    },
+    "JUMP_FALL": {
+      "offset": {
+        "x": -9600,
+        "y": -38400
+      },
+      "width": 19956,
+      "height": 30392
+    },
+    "JUMP_LIGHT_PUNCH": {
+      "offset": {
+        "x": -9600,
+        "y": -38400
+      },
+      "width": 18369,
+      "height": 25783
+    },
+    "JUMP_HEAVY_PUNCH": {
+      "offset": {
+        "x": -9902,
+        "y": -32885
+      },
+      "width": 19653,
+      "height": 22762
+    },
+    "JUMP_LIGHT_KICK": {
+      "offset": {
+        "x": -22945,
+        "y": -25600
+      },
+      "width": 33634,
+      "height": 25328
+    },
+    "JUMP_HEAVY_KICK": {
+      "offset": {
+        "x": -23489,
+        "y": -33090
+      },
+      "width": 29412,
+      "height": 27914
+    },
+    "LANDING": {
+      "offset": {
+        "x": -9600,
+        "y": -35000
+      },
+      "width": 20635,
+      "height": 35000
+    },
+    "STAND_GUARD": {
+      "offset": {
+        "x": -9600,
+        "y": -35227
+      },
+      "width": 17992,
+      "height": 35227
+    },
+    "CROUCH_GUARD": {
+      "offset": {
+        "x": -9600,
+        "y": -23040
+      },
+      "width": 19200,
+      "height": 23040
+    },
+    "STAND_LIGHT_PUNCH": {
+      "offset": {
+        "x": -10431,
+        "y": -35454
+      },
+      "width": 20031,
+      "height": 35454
+    },
+    "STAND_HEAVY_PUNCH": {
+      "offset": {
+        "x": -9751,
+        "y": -35454
+      },
+      "width": 19351,
+      "height": 35454
+    },
+    "STAND_LIGHT_KICK": {
+      "offset": {
+        "x": -9600,
+        "y": -38400
+      },
+      "width": 19200,
+      "height": 38400
+    },
+    "STAND_HEAVY_KICK": {
+      "offset": {
+        "x": -9600,
+        "y": -38400
+      },
+      "width": 19200,
+      "height": 38400
+    },
+    "CROUCH_LIGHT_PUNCH": {
+      "offset": {
+        "x": -9600,
+        "y": -20396
+      },
+      "width": 19502,
+      "height": 20396
+    },
+    "CROUCH_HEAVY_PUNCH": {
+      "offset": {
+        "x": -7862,
+        "y": -20244
+      },
+      "width": 16858,
+      "height": 20244
+    },
+    "CROUCH_LIGHT_KICK": {
+      "offset": {
+        "x": -11413,
+        "y": -20168
+      },
+      "width": 21089,
+      "height": 19942
+    },
+    "CROUCH_HEAVY_KICK": {
+      "offset": {
+        "x": -16777,
+        "y": -20094
+      },
+      "width": 26377,
+      "height": 20094
+    },
+    "SPECIAL_1": {
+      "offset": {
+        "x": -21764,
+        "y": -38400
+      },
+      "width": 32195,
+      "height": 13770
+    },
+    "HIT_STUN": {
+      "offset": {
+        "x": -9600,
+        "y": -38400
+      },
+      "width": 19200,
+      "height": 38400
+    },
+    "HIT_STUN_LIGHT": {
+      "offset": {
+        "x": -8165,
+        "y": -36436
+      },
+      "width": 17765,
+      "height": 36436
+    },
+    "HIT_STUN_HEAVY": {
+      "offset": {
+        "x": -9600,
+        "y": -38400
+      },
+      "width": 19200,
+      "height": 38400
+    },
+    "BLOCK_STUN": {
+      "offset": {
+        "x": -9600,
+        "y": -35378
+      },
+      "width": 18596,
+      "height": 35378
+    },
+    "KNOCKDOWN": {
+      "offset": {
+        "x": -4227,
+        "y": -2000
+      },
+      "width": 0,
+      "height": 0
+    },
+    "GET_UP": {
+      "offset": {
+        "x": -11262,
+        "y": -24725
+      },
+      "width": 20258,
+      "height": 24725
+    }
+  },
+  "hitboxes": {
+    "JUMP_LIGHT_PUNCH": {
+      "offset": {
+        "x": 9044,
+        "y": -30128
+      },
+      "width": 10137,
+      "height": 7987
+    },
+    "JUMP_HEAVY_PUNCH": {
+      "offset": {
+        "x": 3831,
+        "y": -20551
+      },
+      "width": 8871,
+      "height": 10300
+    },
+    "JUMP_LIGHT_KICK": {
+      "offset": {
+        "x": -4081,
+        "y": -15174
+      },
+      "width": 27606,
+      "height": 5951
+    },
+    "JUMP_HEAVY_KICK": {
+      "offset": {
+        "x": -19059,
+        "y": -15536
+      },
+      "width": 40906,
+      "height": 10809
+    },
+    "STAND_LIGHT_PUNCH": {
+      "offset": {
+        "x": 3000,
+        "y": -30000
+      },
+      "width": 13680,
+      "height": 4813
+    },
+    "STAND_HEAVY_PUNCH": {
+      "offset": {
+        "x": 4629,
+        "y": -30525
+      },
+      "width": 12842,
+      "height": 4760
+    },
+    "STAND_LIGHT_KICK": {
+      "offset": {
+        "x": 6022,
+        "y": -14048
+      },
+      "width": 13849,
+      "height": 13821
+    },
+    "STAND_HEAVY_KICK": {
+      "offset": {
+        "x": 3604,
+        "y": -25208
+      },
+      "width": 16629,
+      "height": 9322
+    },
+    "CROUCH_LIGHT_PUNCH": {
+      "offset": {
+        "x": 3000,
+        "y": -20133
+      },
+      "width": 14632,
+      "height": 4133
+    },
+    "CROUCH_HEAVY_PUNCH": {
+      "offset": {
+        "x": 3453,
+        "y": -36523
+      },
+      "width": 10306,
+      "height": 15275
+    },
+    "CROUCH_LIGHT_KICK": {
+      "offset": {
+        "x": 2849,
+        "y": -10422
+      },
+      "width": 18831,
+      "height": 7778
+    },
+    "CROUCH_HEAVY_KICK": {
+      "offset": {
+        "x": 4435,
+        "y": -12228
+      },
+      "width": 19490,
+      "height": 12217
+    },
+    "SPECIAL_1": {
+      "offset": {
+        "x": 5211,
+        "y": -34634
+      },
+      "width": 16926,
+      "height": 7280
+    }
+  },
+  "pushboxes": {
+    "IDLE": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "WALK_FORWARD": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "WALK_BACKWARD": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "CROUCH": {
+      "offset": {
+        "x": -6000,
+        "y": -17280
+      },
+      "width": 12000,
+      "height": 17280
+    },
+    "JUMP_START": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "JUMP_UP": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "JUMP_FORWARD": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "JUMP_BACKWARD": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "DASH_BACKWARD": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "JUMP_FALL": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 11924,
+      "height": 20792
+    },
+    "JUMP_LIGHT_PUNCH": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 11320,
+      "height": 16183
+    },
+    "JUMP_HEAVY_PUNCH": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 11093,
+      "height": 18752
+    },
+    "JUMP_LIGHT_KICK": {
+      "offset": {
+        "x": -7226,
+        "y": -25532
+      },
+      "width": 13226,
+      "height": 25532
+    },
+    "JUMP_HEAVY_KICK": {
+      "offset": {
+        "x": -6136,
+        "y": -33294
+      },
+      "width": 12136,
+      "height": 28391
+    },
+    "LANDING": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "STAND_GUARD": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "CROUCH_GUARD": {
+      "offset": {
+        "x": -6000,
+        "y": -17280
+      },
+      "width": 12000,
+      "height": 17280
+    },
+    "STAND_LIGHT_PUNCH": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "STAND_HEAVY_PUNCH": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "STAND_LIGHT_KICK": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "STAND_HEAVY_KICK": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "CROUCH_LIGHT_PUNCH": {
+      "offset": {
+        "x": -6000,
+        "y": -17280
+      },
+      "width": 12000,
+      "height": 17280
+    },
+    "CROUCH_HEAVY_PUNCH": {
+      "offset": {
+        "x": -6000,
+        "y": -17280
+      },
+      "width": 12000,
+      "height": 17280
+    },
+    "CROUCH_LIGHT_KICK": {
+      "offset": {
+        "x": -6000,
+        "y": -17280
+      },
+      "width": 12000,
+      "height": 17280
+    },
+    "CROUCH_HEAVY_KICK": {
+      "offset": {
+        "x": -6000,
+        "y": -17280
+      },
+      "width": 12000,
+      "height": 17280
+    },
+    "SPECIAL_1": {
+      "offset": {
+        "x": -7814,
+        "y": -37111
+      },
+      "width": 13284,
+      "height": 12406
+    },
+    "HIT_STUN": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "HIT_STUN_LIGHT": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "HIT_STUN_HEAVY": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "BLOCK_STUN": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "KNOCKDOWN": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    },
+    "GET_UP": {
+      "offset": {
+        "x": -6000,
+        "y": -28800
+      },
+      "width": 12000,
+      "height": 28800
+    }
+  }
+}

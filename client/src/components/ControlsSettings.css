@@ -1,0 +1,120 @@
+.controls-settings-screen {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+  padding: clamp(12px, 3vh, 16px);
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.controls-settings-content {
+  width: min(960px, 100%);
+  background: rgba(26, 26, 46, 0.9);
+  border: 1px solid #4a4a6a;
+  border-radius: 16px;
+  padding: clamp(16px, 4vh, 32px);
+  margin: clamp(8px, 2vh, 16px) 0;
+}
+
+.controls-settings-content h1 {
+  text-align: center;
+  color: #4ecdc4;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+}
+
+.controls-settings-subtitle {
+  text-align: center;
+  color: #888;
+  margin-bottom: 28px;
+  font-size: 14px;
+}
+
+.bindings-panels {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 28px;
+}
+
+.bindings-panel {
+  background: rgba(45, 45, 68, 0.6);
+  border: 1px solid #4a4a6a;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.bindings-panel h3 {
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.bindings-panel.player-1 h3 {
+  color: #4ecdc4;
+}
+
+.bindings-panel.player-2 h3 {
+  color: #ff6b6b;
+}
+
+.bindings-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.binding-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: #2d2d44;
+  border: 1px solid #4a4a6a;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.binding-row:hover {
+  border-color: #6a6a8a;
+  background: #353552;
+}
+
+.binding-row.listening {
+  border-color: #ffd93d;
+  box-shadow: 0 0 12px rgba(255, 217, 61, 0.25);
+}
+
+.binding-label {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.binding-key {
+  min-width: 88px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #1a1a2e;
+  border: 1px solid #4a4a6a;
+  font-family: monospace;
+  font-size: 13px;
+  text-align: center;
+  color: #ffd93d;
+}
+
+.controls-settings-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.controls-settings-actions .menu-btn {
+  min-width: 140px;
+}
