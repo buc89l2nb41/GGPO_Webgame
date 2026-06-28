@@ -132,6 +132,13 @@ io.on('connection', (socket: Socket) => {
     socket.to(roomId).emit('sync-message', data);
   });
 
+  socket.on('match-ready', (data: unknown) => {
+    const roomId = playerRooms.get(socket.id);
+    if (!roomId) return;
+
+    socket.to(roomId).emit('match-ready', data);
+  });
+
   socket.on('ping-request', (timestamp: number, callback: (response: { timestamp: number; serverTime: number }) => void) => {
     callback({ timestamp, serverTime: Date.now() });
   });

@@ -262,6 +262,8 @@ function OnlineGameCanvas({
 
       isLoading={game.isLoading}
 
+      loadingMessage={game.loadingMessage}
+
       isPaused={game.isPaused}
 
       onPauseToggle={game.handlePauseToggle}
@@ -294,6 +296,8 @@ interface GameCanvasShellProps {
 
   isLoading: boolean;
 
+  loadingMessage?: string;
+
   isPaused: boolean;
 
   onPauseToggle: () => void;
@@ -321,6 +325,8 @@ function GameCanvasShell({
   ggpoStats,
 
   isLoading,
+
+  loadingMessage = 'Loading sprites...',
 
   isPaused,
 
@@ -350,7 +356,7 @@ function GameCanvasShell({
 
           <div className="loading-overlay">
 
-            <div className="loading-text">Loading sprites...</div>
+            <div className="loading-text">{loadingMessage}</div>
 
           </div>
 

@@ -16,6 +16,7 @@ import { GAME_WIDTH, GAME_HEIGHT } from '../components/AspectRatioViewport';
 import { GGPOSession, GGPOStats } from '../network/ggpo/GGPOSession';
 import { PeerConnection } from '../network/webrtc/PeerConnection';
 import { SyncHealthMonitor, SyncHealthStatus } from '../network/sync/SyncHealthMonitor';
+import { MatchReadyGate } from '../network/sync/MatchReadyGate';
 
 export interface UseOnlineGameCanvasOptions {
   peerConnection: PeerConnection;
@@ -53,6 +54,7 @@ export function useOnlineGameCanvas({
   const [ggpoStats, setGgpoStats] = useState<GGPOStats | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState('Loading sprites...');
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [syncStatus, setSyncStatus] = useState<SyncHealthStatus>('synced');
   const [syncMessage, setSyncMessage] = useState('Synced');
@@ -87,6 +89,7 @@ export function useOnlineGameCanvas({
     let inputSystem: InputSystem | null = null;
     let ggpo: GGPOSession | null = null;
     let renderer: Renderer | null = null;
+    let matchReadyGate: MatchReadyGate | null = null;
     const syncMonitor = new SyncHealthMonitor();
     syncMonitorRef.current = syncMonitor;
 
@@ -118,6 +121,7 @@ export function useOnlineGameCanvas({
 
     const startGame = async () => {
       setIsLoading(true);
+      setLoadingMessage('Loading sprites...');
       runningRef.current = false;
       syncMonitor.reset();
       publishSyncStatus('synced', 'Synced');
@@ -126,6 +130,12 @@ export function useOnlineGameCanvas({
         cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
       }
+
+      matchReadyGate = new MatchReadyGate(peerConnection, (message) => {
+        if (mounted) {
+          setLoadingMessage(message);
+        }
+      });
 
       inputSystem = new InputSystem(keyBindings.player1, keyBindings.player1);
       inputSystemRef.current = inputSystem;
@@ -147,6 +157,12 @@ export function useOnlineGameCanvas({
       } catch (error) {
         console.warn('Failed to load sprites, using fallback rendering:', error);
       }
+
+      if (!mounted) return;
+
+      setLoadingMessage('Waiting for opponent...');
+      matchReadyGate.signalLocalReady();
+      await matchReadyGate.waitForStart();
 
       if (!mounted) return;
 
@@ -335,6 +351,7 @@ export function useOnlineGameCanvas({
     return () => {
       mounted = false;
       runningRef.current = false;
+      matchReadyGate?.dispose();
       if (statsInterval) clearInterval(statsInterval);
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -407,6 +424,7 @@ export function useOnlineGameCanvas({
     ggpoStats,
     isPaused,
     isLoading,
+    loadingMessage,
     gameState,
     syncStatus,
     syncMessage,

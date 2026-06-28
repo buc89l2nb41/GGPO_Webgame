@@ -15,6 +15,7 @@ import { io, Socket } from 'socket.io-client';
 import { getSignalingServerUrl } from '../../config/network';
 
 import { isSyncWireMessage, SyncWireMessage } from '../sync/syncMessages';
+import { isMatchReadyMessage } from '../sync/matchReadyMessages';
 
 
 
@@ -132,6 +133,8 @@ export class PeerConnection {
 
   private syncListener: ((message: SyncWireMessage) => void) | null = null;
 
+  private matchReadyListener: (() => void) | null = null;
+
   private lifecycleCallbacks: Partial<ConnectionCallbacks> | null = null;
 
   private hostConnectAttempts = 0;
@@ -168,6 +171,14 @@ export class PeerConnection {
 
 
 
+  setMatchReadyListener(listener: (() => void) | null): void {
+
+    this.matchReadyListener = listener;
+
+  }
+
+
+
   setLifecycleCallbacks(callbacks: Partial<ConnectionCallbacks> | null): void {
 
     this.lifecycleCallbacks = callbacks;
@@ -187,6 +198,14 @@ export class PeerConnection {
   private dispatchSyncMessage(message: SyncWireMessage): void {
 
     this.syncListener?.(message);
+
+  }
+
+
+
+  private dispatchMatchReady(): void {
+
+    this.matchReadyListener?.();
 
   }
 
@@ -397,6 +416,14 @@ export class PeerConnection {
         this.dispatchSyncMessage(data);
 
       }
+
+    });
+
+
+
+    this.socket.on('match-ready', () => {
+
+      this.dispatchMatchReady();
 
     });
 
@@ -682,6 +709,10 @@ export class PeerConnection {
 
           this.callbacks.onData(data);
 
+        } else if (isMatchReadyMessage(data)) {
+
+          this.dispatchMatchReady();
+
         } else {
 
           this.callbacks.onData(data);
@@ -960,6 +991,10 @@ export class PeerConnection {
 
           this.socket.emit('sync-message', data);
 
+        } else if (isMatchReadyMessage(data)) {
+
+          this.socket.emit('match-ready', data);
+
         }
 
       }
@@ -989,6 +1024,14 @@ export class PeerConnection {
   sendSyncMessage(message: SyncWireMessage): void {
 
     this.send(message);
+
+  }
+
+
+
+  sendMatchReady(): void {
+
+    this.send({ type: 'match-ready' });
 
   }
 
