@@ -340,139 +340,250 @@ const ANIMATION_CONFIG: Record<string, {
   },
 };
 
+type AnimationConfig = (typeof ANIMATION_CONFIG)[string];
+
+/** Loaded in the background — 49 frames, not needed for match start */
+const DEFERRED_ANIMATION_KEYS = new Set(['knockdown']);
+
+export type SpriteLoadProgressCallback = (loaded: number, total: number) => void;
+
+function collectAnimationPaths(config: AnimationConfig): string[] {
+  const paths: string[] = [];
+  const startFrame = config.startFrame ?? 0;
+  const frameIndices = config.frameIndices
+    ?? Array.from({ length: config.frameCount }, (_, i) => startFrame + i);
+
+  for (const frameIdx of frameIndices) {
+    paths.push(`/sprites/${config.folder}/${config.folder}_${frameIdx.toString().padStart(2, '0')}.png`);
+  }
+
+  if (config.activeFrameFile) {
+    paths.push(`/sprites/${config.folder}/${config.activeFrameFile}`);
+  }
+
+  if (config.startupFrameFile) {
+    const startupFolder = config.startupFrameFolder ?? config.folder;
+    paths.push(`/sprites/${startupFolder}/${config.startupFrameFile}`);
+  }
+
+  if (config.recoveryFrameFile) {
+    const recoveryFolder = config.recoveryFrameFolder ?? config.folder;
+    paths.push(`/sprites/${recoveryFolder}/${config.recoveryFrameFile}`);
+  }
+
+  if (config.recoveryFrameIndices) {
+    const recoveryFolder = config.recoveryFrameFolder ?? config.folder;
+    for (const frameIdx of config.recoveryFrameIndices) {
+      paths.push(`/sprites/${recoveryFolder}/${recoveryFolder}_${frameIdx.toString().padStart(2, '0')}.png`);
+    }
+  }
+
+  if (config.startupFrameIndices) {
+    const startupFolder = config.startupFrameFolder ?? config.folder;
+    for (const frameIdx of config.startupFrameIndices) {
+      paths.push(`/sprites/${startupFolder}/${startupFolder}_${frameIdx.toString().padStart(2, '0')}.png`);
+    }
+  }
+
+  return paths;
+}
+
+function toSpriteFrame(image: HTMLImageElement): SpriteFrame {
+  return {
+    image,
+    width: image.width,
+    height: image.height,
+    offsetX: 0,
+    offsetY: 0,
+  };
+}
+
 export class SpriteLoader {
   private cache: Map<string, HTMLImageElement> = new Map();
   private loading: Map<string, Promise<HTMLImageElement>> = new Map();
   private spriteData: SpriteData | null = null;
-  private loaded: boolean = false;
+  private essentialsLoaded = false;
+  private deferredLoaded = false;
+  private deferredLoadPromise: Promise<void> | null = null;
 
-  async loadAll(): Promise<SpriteData> {
-    if (this.spriteData && this.loaded) {
+  async loadAll(onProgress?: SpriteLoadProgressCallback): Promise<SpriteData> {
+    const data = await this.loadEssentials(onProgress);
+    await this.loadDeferred();
+    return data;
+  }
+
+  /** Core sprites needed before gameplay can start */
+  async loadEssentials(onProgress?: SpriteLoadProgressCallback): Promise<SpriteData> {
+    if (this.spriteData && this.essentialsLoaded) {
       return this.spriteData;
     }
 
+    const paths = this.collectPathsForKeys(
+      Object.keys(ANIMATION_CONFIG).filter((key) => !DEFERRED_ANIMATION_KEYS.has(key)),
+    );
+    await this.preloadPaths(paths, onProgress);
+
     const animations: Partial<Record<CharacterState, Animation>> = {};
-
-    for (const [_name, config] of Object.entries(ANIMATION_CONFIG)) {
-      const frames: SpriteFrame[] = [];
-      const startFrame = config.startFrame ?? 0;
-      const frameIndices = config.frameIndices
-        ?? Array.from({ length: config.frameCount }, (_, i) => startFrame + i);
-      
-      for (const frameIdx of frameIndices) {
-        const path = `/sprites/${config.folder}/${config.folder}_${frameIdx.toString().padStart(2, '0')}.png`;
-        const img = await this.loadImage(path);
-        
-        frames.push({
-          image: img,
-          width: img.width,
-          height: img.height,
-          offsetX: 0,
-          offsetY: 0,
-        });
+    for (const [name, config] of Object.entries(ANIMATION_CONFIG)) {
+      if (DEFERRED_ANIMATION_KEYS.has(name)) {
+        continue;
       }
-
-      let activeFrame: SpriteFrame | undefined;
-      if (config.activeFrameFile) {
-        const activePath = `/sprites/${config.folder}/${config.activeFrameFile}`;
-        const activeImg = await this.loadImage(activePath);
-        activeFrame = {
-          image: activeImg,
-          width: activeImg.width,
-          height: activeImg.height,
-          offsetX: 0,
-          offsetY: 0,
-        };
-      }
-
-      let startupFrame: SpriteFrame | undefined;
-      if (config.startupFrameFile) {
-        const startupFolder = config.startupFrameFolder ?? config.folder;
-        const startupPath = `/sprites/${startupFolder}/${config.startupFrameFile}`;
-        const startupImg = await this.loadImage(startupPath);
-        startupFrame = {
-          image: startupImg,
-          width: startupImg.width,
-          height: startupImg.height,
-          offsetX: 0,
-          offsetY: 0,
-        };
-      }
-
-      let recoveryFrame: SpriteFrame | undefined;
-      if (config.recoveryFrameFile) {
-        const recoveryFolder = config.recoveryFrameFolder ?? config.folder;
-        const recoveryPath = `/sprites/${recoveryFolder}/${config.recoveryFrameFile}`;
-        const recoveryImg = await this.loadImage(recoveryPath);
-        recoveryFrame = {
-          image: recoveryImg,
-          width: recoveryImg.width,
-          height: recoveryImg.height,
-          offsetX: 0,
-          offsetY: 0,
-        };
-      }
-
-      let recoveryFrames: SpriteFrame[] | undefined;
-      if (config.recoveryFrameIndices) {
-        const recoveryFolder = config.recoveryFrameFolder ?? config.folder;
-        recoveryFrames = [];
-        for (const frameIdx of config.recoveryFrameIndices) {
-          const path = `/sprites/${recoveryFolder}/${recoveryFolder}_${frameIdx.toString().padStart(2, '0')}.png`;
-          const img = await this.loadImage(path);
-          recoveryFrames.push({
-            image: img,
-            width: img.width,
-            height: img.height,
-            offsetX: 0,
-            offsetY: 0,
-          });
-        }
-      }
-
-      let startupFrames: SpriteFrame[] | undefined;
-      if (config.startupFrameIndices) {
-        const startupFolder = config.startupFrameFolder ?? config.folder;
-        startupFrames = [];
-        for (const frameIdx of config.startupFrameIndices) {
-          const path = `/sprites/${startupFolder}/${startupFolder}_${frameIdx.toString().padStart(2, '0')}.png`;
-          const img = await this.loadImage(path);
-          startupFrames.push({
-            image: img,
-            width: img.width,
-            height: img.height,
-            offsetX: 0,
-            offsetY: 0,
-          });
-        }
-      }
-
-      const animation: Animation = {
-        frames,
-        frameDuration: config.frameDuration,
-        loop: config.loop,
-        phaseAttack: config.phaseAttack,
-        activeFrame,
-        startupFrame,
-        recoveryFrame,
-        recoveryFrames,
-        startupFrames,
-        knockdownSequence: config.knockdownSequence,
-        jumpArc: config.jumpArc,
-      };
-
-      for (const state of config.states) {
-        animations[state] = animation;
-      }
+      this.assignAnimation(animations, config);
     }
 
     this.spriteData = {
       animations,
       defaultAnimation: CharacterState.IDLE,
     };
-    
-    this.loaded = true;
+    this.essentialsLoaded = true;
     return this.spriteData;
+  }
+
+  /** Heavy animations (knockdown) — safe to load while waiting for opponent */
+  loadDeferred(): Promise<void> {
+    if (this.deferredLoaded) {
+      return Promise.resolve();
+    }
+    if (this.deferredLoadPromise) {
+      return this.deferredLoadPromise;
+    }
+
+    this.deferredLoadPromise = this.loadDeferredInternal();
+    return this.deferredLoadPromise;
+  }
+
+  private async loadDeferredInternal(): Promise<void> {
+    if (this.deferredLoaded) {
+      return;
+    }
+
+    if (!this.spriteData) {
+      await this.loadEssentials();
+    }
+
+    const paths = this.collectPathsForKeys([...DEFERRED_ANIMATION_KEYS]);
+    await this.preloadPaths(paths);
+
+    for (const name of DEFERRED_ANIMATION_KEYS) {
+      const config = ANIMATION_CONFIG[name];
+      if (config) {
+        this.assignAnimation(this.spriteData!.animations, config);
+      }
+    }
+
+    this.deferredLoaded = true;
+  }
+
+  private collectPathsForKeys(keys: string[]): string[] {
+    const paths: string[] = [];
+    for (const key of keys) {
+      const config = ANIMATION_CONFIG[key];
+      if (config) {
+        paths.push(...collectAnimationPaths(config));
+      }
+    }
+    return paths;
+  }
+
+  private assignAnimation(
+    animations: Partial<Record<CharacterState, Animation>>,
+    config: AnimationConfig,
+  ): void {
+    const startFrame = config.startFrame ?? 0;
+    const frameIndices = config.frameIndices
+      ?? Array.from({ length: config.frameCount }, (_, i) => startFrame + i);
+
+    const frames = frameIndices.map((frameIdx) => {
+      const path = `/sprites/${config.folder}/${config.folder}_${frameIdx.toString().padStart(2, '0')}.png`;
+      return toSpriteFrame(this.getCachedImage(path));
+    });
+
+    let activeFrame: SpriteFrame | undefined;
+    if (config.activeFrameFile) {
+      const activePath = `/sprites/${config.folder}/${config.activeFrameFile}`;
+      activeFrame = toSpriteFrame(this.getCachedImage(activePath));
+    }
+
+    let startupFrame: SpriteFrame | undefined;
+    if (config.startupFrameFile) {
+      const startupFolder = config.startupFrameFolder ?? config.folder;
+      const startupPath = `/sprites/${startupFolder}/${config.startupFrameFile}`;
+      startupFrame = toSpriteFrame(this.getCachedImage(startupPath));
+    }
+
+    let recoveryFrame: SpriteFrame | undefined;
+    if (config.recoveryFrameFile) {
+      const recoveryFolder = config.recoveryFrameFolder ?? config.folder;
+      const recoveryPath = `/sprites/${recoveryFolder}/${config.recoveryFrameFile}`;
+      recoveryFrame = toSpriteFrame(this.getCachedImage(recoveryPath));
+    }
+
+    let recoveryFrames: SpriteFrame[] | undefined;
+    if (config.recoveryFrameIndices) {
+      const recoveryFolder = config.recoveryFrameFolder ?? config.folder;
+      recoveryFrames = config.recoveryFrameIndices.map((frameIdx) => {
+        const path = `/sprites/${recoveryFolder}/${recoveryFolder}_${frameIdx.toString().padStart(2, '0')}.png`;
+        return toSpriteFrame(this.getCachedImage(path));
+      });
+    }
+
+    let startupFrames: SpriteFrame[] | undefined;
+    if (config.startupFrameIndices) {
+      const startupFolder = config.startupFrameFolder ?? config.folder;
+      startupFrames = config.startupFrameIndices.map((frameIdx) => {
+        const path = `/sprites/${startupFolder}/${startupFolder}_${frameIdx.toString().padStart(2, '0')}.png`;
+        return toSpriteFrame(this.getCachedImage(path));
+      });
+    }
+
+    const animation: Animation = {
+      frames,
+      frameDuration: config.frameDuration,
+      loop: config.loop,
+      phaseAttack: config.phaseAttack,
+      activeFrame,
+      startupFrame,
+      recoveryFrame,
+      recoveryFrames,
+      startupFrames,
+      knockdownSequence: config.knockdownSequence,
+      jumpArc: config.jumpArc,
+    };
+
+    for (const state of config.states) {
+      animations[state] = animation;
+    }
+  }
+
+  private getCachedImage(path: string): HTMLImageElement {
+    const image = this.cache.get(path);
+    if (!image) {
+      throw new Error(`Sprite not loaded: ${path}`);
+    }
+    return image;
+  }
+
+  private async preloadPaths(
+    paths: string[],
+    onProgress?: SpriteLoadProgressCallback,
+  ): Promise<void> {
+    const uniquePaths = [...new Set(paths)];
+    if (uniquePaths.length === 0) {
+      return;
+    }
+
+    let loaded = 0;
+    const report = () => {
+      loaded += 1;
+      onProgress?.(loaded, uniquePaths.length);
+    };
+
+    await Promise.all(
+      uniquePaths.map(async (path) => {
+        await this.loadImage(path);
+        report();
+      }),
+    );
   }
 
   private loadImage(path: string): Promise<HTMLImageElement> {
@@ -486,6 +597,7 @@ export class SpriteLoader {
 
     const promise = new Promise<HTMLImageElement>((resolve, reject) => {
       const img = new Image();
+      img.decoding = 'async';
       img.onload = () => {
         this.cache.set(path, img);
         this.loading.delete(path);
@@ -507,7 +619,11 @@ export class SpriteLoader {
   }
 
   isLoaded(): boolean {
-    return this.loaded;
+    return this.essentialsLoaded;
+  }
+
+  isFullyLoaded(): boolean {
+    return this.essentialsLoaded && this.deferredLoaded;
   }
 }
 

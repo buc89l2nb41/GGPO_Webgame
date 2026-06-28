@@ -170,6 +170,8 @@ function LocalGameCanvas({
 
       isLoading={game.isLoading}
 
+      loadingMessage={game.loadingMessage}
+
       isPaused={game.isPaused}
 
       onPauseToggle={game.handlePauseToggle}

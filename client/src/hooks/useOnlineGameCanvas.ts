@@ -150,10 +150,16 @@ export function useOnlineGameCanvas({
       rendererRef.current = renderer;
 
       try {
-        const spriteData = await globalSpriteLoader.loadAll();
+        const spriteData = await globalSpriteLoader.loadEssentials((loaded, total) => {
+          if (mounted) {
+            const percent = Math.round((loaded / total) * 100);
+            setLoadingMessage(`Loading sprites... ${percent}%`);
+          }
+        });
         if (mounted) {
           renderer.setSpriteData(spriteData);
         }
+        void globalSpriteLoader.loadDeferred();
       } catch (error) {
         console.warn('Failed to load sprites, using fallback rendering:', error);
       }

@@ -30,6 +30,7 @@ export function useGameCanvas({
   const [stats, setStats] = useState<GameLoopStats | null>(null);
   const [isPaused, setIsPaused] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState('Loading sprites...');
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [renderMeta, setRenderMeta] = useState({ cameraX: 0, scaleX: 1, scaleY: 1 });
 
@@ -51,6 +52,7 @@ export function useGameCanvas({
       }
 
       setIsLoading(true);
+      setLoadingMessage('Loading sprites...');
 
       inputSystem = new InputSystem(keyBindings.player1, keyBindings.player2);
       inputSystemRef.current = inputSystem;
@@ -65,10 +67,16 @@ export function useGameCanvas({
       rendererRef.current = renderer;
 
       try {
-        const spriteData = await globalSpriteLoader.loadAll();
+        const spriteData = await globalSpriteLoader.loadEssentials((loaded, total) => {
+          if (mounted) {
+            const percent = Math.round((loaded / total) * 100);
+            setLoadingMessage(`Loading sprites... ${percent}%`);
+          }
+        });
         if (mounted) {
           renderer.setSpriteData(spriteData);
         }
+        void globalSpriteLoader.loadDeferred();
       } catch (error) {
         console.warn('Failed to load sprites, using fallback rendering:', error);
       }
@@ -179,6 +187,7 @@ export function useGameCanvas({
     stats,
     isPaused,
     isLoading,
+    loadingMessage,
     gameState,
     setGameState,
     renderMeta,
