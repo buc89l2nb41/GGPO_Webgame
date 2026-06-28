@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import { createServer } from 'http';
 import { networkInterfaces } from 'node:os';
 import { Server, Socket } from 'socket.io';
@@ -224,11 +224,11 @@ function generateRoomId(): string {
   return result;
 }
 
-app.get('/health', (_req, res) => {
+app.get('/health', (_req: Request, res: Response) => {
   res.json({ status: 'ok', players: io.sockets.sockets.size, rooms: rooms.size });
 });
 
-app.get('/rooms', (_req, res) => {
+app.get('/rooms', (_req: Request, res: Response) => {
   const publicRooms = Array.from(rooms.entries())
     .filter(([_, room]) => room.state === 'waiting')
     .map(([id, room]) => ({
